@@ -12,9 +12,9 @@ export const intercept = (config: Config, requestUrl: string, options: NgFetchRe
     const {method, url, urlParameter, queryParameter, headers} = interceptor({
         method: options.method,
         url: requestUrl,
-        headers: options.headers,
-        urlParameter: options.urlParameter,
-        queryParameter: options.queryParameter
+        headers: options.headers || {},
+        urlParameter: options.urlParameter || {},
+        queryParameter: options.queryParameter || []
     })
 
     const buildUrl = config.buildUrl(config, url, urlParameter, queryParameter);
@@ -22,7 +22,7 @@ export const intercept = (config: Config, requestUrl: string, options: NgFetchRe
     //ensure serializer name in lowercase like application/json
     config.bodySerializers =
         Object.entries(config.bodySerializers)
-            .reduce((prev, [type, serializer])=>
+            .reduce((prev, [type, serializer]) =>
                 ({...prev, [type.toLowerCase()]: serializer}), {default: config.bodySerializers.default}
             );
 
