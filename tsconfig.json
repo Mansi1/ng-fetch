@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "moduleResolution": "node",
+    "module": "commonjs",
+    "outDir": "dist",
+    "strict": false,
+    "declaration": true,
+    "noEmit": false,
+    "rootDirs": [
+      "src"
+    ],
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "strictPropertyInitialization": false,
+    "downlevelIteration":true,
+    "sourceMap": true,
+    "lib": [
+      "es2017"
+    ],
+    "types": ["node"]
+  },
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "dist",
+    "node_modules"
+  ]
+}
