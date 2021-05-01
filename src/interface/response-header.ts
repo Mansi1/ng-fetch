@@ -1,1 +1,1 @@
-export type ResponseHeader =  {[header: string]:string}
+export type ResponseHeader = { [header: string]: string };

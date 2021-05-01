@@ -1,4 +1,4 @@
 export interface Runtime {
-    node: boolean;
-    browser: boolean;
+  node: boolean;
+  browser: boolean;
 }

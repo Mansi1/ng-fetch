@@ -1,5 +1,5 @@
-import {ParameterType} from "./query-parameter";
+import { ParameterType } from './query-parameter';
 
 export interface UrlParameter {
-    [name: string]: ParameterType;
+  [name: string]: ParameterType;
 }

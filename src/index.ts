@@ -1,5 +1,3 @@
-import {ngFetch} from "./ng-fetch";
+import { ngFetchBuilder } from './ng-fetch';
 
-export * from './ng-fetch'
-export default ngFetch;
-
+export default ngFetchBuilder();

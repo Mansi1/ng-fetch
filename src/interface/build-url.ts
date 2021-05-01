@@ -1,5 +1,10 @@
-import {Config} from "./config";
-import {UrlParameter} from "./url-parameter";
-import {QueryParameter} from "./query-parameter";
+import { UrlParameter } from './url-parameter';
+import { QueryParameter } from './query-parameter';
+import { BuildQueryParameter } from './build-query-parameter';
 
-export type BuildUrl = (config: Config, url: string, urlParameter?: UrlParameter, queryParameter?: Array<QueryParameter>) => string
+export type BuildUrl = (
+  url: string,
+  buildQueryParameters: BuildQueryParameter,
+  urlParameter?: UrlParameter,
+  queryParameter?: Array<QueryParameter>,
+) => string;
