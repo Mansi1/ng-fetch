@@ -1,4 +1,3 @@
-import { Buffer } from 'buffer';
 import { ResponseHeader } from './response-header';
 
 export interface NgFetchResponse {

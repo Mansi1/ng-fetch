@@ -7,6 +7,7 @@ import { ngFetchBrowserBuilder } from './runtime/browser/ng-fetch-browser-builde
 import { BodyAdapterPlainText } from './adapter/body/body-adapter-plain-text';
 import { buildUrl } from './function/build-url';
 import { ngFetchNodeBuilder } from './runtime/node/ng-fetch-node-builder';
+import { BodyAdapterMultipartFormData } from './adapter/body/body-adapter-multipart';
 
 export const { browser, node } = RUNTIME;
 
@@ -19,13 +20,14 @@ export const DEFAULT_CONFIG: Config = {
     default: BodyAdapterJson,
     'application/json': BodyAdapterJson,
     'plain/text': BodyAdapterPlainText,
+    'multipart/form-data': BodyAdapterMultipartFormData,
   },
 };
 
-export const ngFetchBuilder = (initConfig: Partial<Config> = DEFAULT_CONFIG): NgFetch => {
+export const builder = (initConfig: Partial<Config> = DEFAULT_CONFIG): NgFetch => {
   const config = { ...DEFAULT_CONFIG, ...initConfig };
 
-  if (node) {
+  if (typeof process !== 'undefined' && process.versions != null && process.versions.node != null) {
     return ngFetchNodeBuilder(config);
   }
   if (browser) {

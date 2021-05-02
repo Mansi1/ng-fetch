@@ -1,4 +1,3 @@
-import { Buffer } from 'buffer';
 import { Config } from '../../interface/config';
 import { NgFetch } from '../../interface/ng-fetch';
 import { NgFetchRequestOption } from '../../interface/ng-fetch-request';
@@ -8,7 +7,6 @@ import { bodyToBuffer as normalBodyToBuffer } from '../../function/body-to-buffe
 import { intercept } from '../../function/intercept';
 import { HEADER_CONTENT_TYPE } from '../../headers';
 
-let initial = false;
 export const bodyToBuffer = (config: Config, contentType: string, body: any): unknown => {
   const bodyToSend = normalBodyToBuffer(config, contentType, body);
   if (bodyToSend instanceof Buffer) {
@@ -17,102 +15,94 @@ export const bodyToBuffer = (config: Config, contentType: string, body: any): un
   return body;
 };
 
-export const ngFetchBrowserBuilder = (config: Config): NgFetch => {
-  if (!initial) {
-    initial = true;
-    // polyfill
-    window.Buffer = Buffer;
-  }
+export const ngFetchBrowserBuilder = (config: Config): NgFetch => (
+  requestUrl: string,
+  options: NgFetchRequestOption = { method: 'GET' },
+): RejectAblePromise<NgFetchResponse> => {
+  const { url, method, headers } = intercept(config, requestUrl, options);
 
-  return (
-    requestUrl: string,
-    options: NgFetchRequestOption = { method: 'GET' },
-  ): RejectAblePromise<NgFetchResponse> => {
-    const { url, method, headers } = intercept(config, requestUrl, options);
+  let requestReject: any;
+  const request = new Promise<NgFetchResponse>((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
 
-    let requestReject: any;
-    const request = new Promise<NgFetchResponse>((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-
-      if (options && options.eventListeners && options.eventListeners.start) {
-        options.eventListeners.start({
-          target: xhr,
-          type: 'browser',
-        });
-      }
-
-      // 2.0 Configure it: GET-request for the URL
-      xhr.open(method, url);
-
-      // set timeout in ms
-      xhr.timeout = config.timeoutInMs;
-
-      // 2.1 Set header
-      // eslint-disable-next-line no-restricted-syntax
-      for (const [headerName, headerValue] of Object.entries(headers)) {
-        xhr.setRequestHeader(headerName, headerValue);
-      }
-
-      requestReject = () => {
-        if (xhr.readyState !== 4) xhr.abort();
-      };
-
-      xhr.addEventListener('abort', () =>
-        reject({
-          status: -1,
-          message: 'You have canceled the request yourself',
-          headers: {},
-        }),
-      );
-      xhr.addEventListener('timeout', () =>
-        reject({
-          status: -2,
-          message: 'Request timeout',
-          headers: {},
-        }),
-      );
-
-      xhr.addEventListener('load', () => {
-        const responseHeaders = getHeaderMap(xhr.getAllResponseHeaders());
-        if (xhr.status >= 200 && xhr.status < 400) {
-          resolve({
-            status: xhr.status,
-            response: Buffer.from(xhr.response),
-            headers: responseHeaders,
-          });
-        } else if (xhr.eventListener.error) {
-          reject({
-            status: xhr.status,
-            message: `Error: ${
-              xhr.responseType === 'text' || xhr.responseType === '' ? xhr.responseText : 'No error message'
-            }`,
-            headers: responseHeaders,
-          });
-        }
+    if (options && options.eventListeners && options.eventListeners.start) {
+      options.eventListeners.start({
+        target: xhr,
+        type: 'browser',
       });
+    }
 
-      xhr.addEventListener('error', () =>
+    // 2.0 Configure it: GET-request for the URL
+    xhr.open(method, url);
+
+    // set timeout in ms
+    xhr.timeout = config.timeoutInMs;
+
+    // 2.1 Set header
+    // eslint-disable-next-line no-restricted-syntax
+    for (const [headerName, headerValue] of Object.entries(headers)) {
+      xhr.setRequestHeader(headerName, headerValue);
+    }
+
+    requestReject = () => {
+      if (xhr.readyState !== 4) xhr.abort();
+    };
+
+    xhr.addEventListener('abort', () =>
+      reject({
+        status: -1,
+        message: 'You have canceled the request yourself',
+        headers: {},
+      }),
+    );
+    xhr.addEventListener('timeout', () =>
+      reject({
+        status: -2,
+        message: 'Request timeout',
+        headers: {},
+      }),
+    );
+
+    xhr.addEventListener('load', () => {
+      const responseHeaders = getHeaderMap(xhr.getAllResponseHeaders());
+      if (xhr.status >= 200 && xhr.status < 400) {
+        resolve({
+          status: xhr.status,
+          response: Buffer.from(xhr.response),
+          headers: responseHeaders,
+        });
+      } else if (xhr.eventListener.error) {
         reject({
-          status: -4,
-          message: `Unknown error: ${
+          status: xhr.status,
+          message: `Error: ${
             xhr.responseType === 'text' || xhr.responseType === '' ? xhr.responseText : 'No error message'
           }`,
-          headers: {},
-        }),
-      );
-
-      if (options?.eventListeners?.uploadProgress) {
-        xhr.upload.addEventListener('progress', options?.eventListeners?.uploadProgress);
+          headers: responseHeaders,
+        });
       }
-
-      if (options?.eventListeners?.downLoadProgress) {
-        xhr.addEventListener('progress', options?.eventListeners?.downLoadProgress);
-      }
-
-      xhr.send(bodyToBuffer(config, headers[HEADER_CONTENT_TYPE], options.body));
     });
 
-    (request as any).reject = requestReject;
-    return request as any;
-  };
+    xhr.addEventListener('error', () =>
+      reject({
+        status: -4,
+        message: `Unknown error: ${
+          xhr.responseType === 'text' || xhr.responseType === '' ? xhr.responseText : 'No error message'
+        }`,
+        headers: {},
+      }),
+    );
+
+    if (options?.eventListeners?.uploadProgress) {
+      xhr.upload.addEventListener('progress', options?.eventListeners?.uploadProgress);
+    }
+
+    if (options?.eventListeners?.downLoadProgress) {
+      xhr.addEventListener('progress', options?.eventListeners?.downLoadProgress);
+    }
+
+    xhr.send(bodyToBuffer(config, headers[HEADER_CONTENT_TYPE], options.body));
+  });
+
+  (request as any).reject = requestReject;
+  return request as any;
 };
