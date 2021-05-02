@@ -71,7 +71,7 @@ export const ngFetchBrowserBuilder = (config: Config): NgFetch => (
           response: Buffer.from(xhr.response),
           headers: responseHeaders,
         });
-      } else if (xhr.eventListener.error) {
+      } else {
         reject({
           status: xhr.status,
           message: `Error: ${
