@@ -1,7 +1,4 @@
-import {Config} from "../../interface/config";
-import {NgFetch} from "../../interface/ng-fetch";
-import {NgFetchRequestOption, ProgressEvent} from "../../interface/ng-fetch-request";
-import {NgFetchResponse, RejectAblePromise} from "../../interface/ng-fetch-response";
+import {Config,NgFetch,NgFetchRequestOption, ProgressEvent,NgFetchResponse, RejectAblePromise} from "../../interface";
 import {HEADER_CONTENT_LENGTH, HEADER_CONTENT_TYPE} from "../browser/ng-fetch-browser-builder";
 import {getRequestAdapter} from "./function/get-request-adapter";
 import {RequestOptions} from "http";

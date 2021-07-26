@@ -1,8 +1,5 @@
-import {Config} from "../interface/config";
-import {NgFetchRequestOption} from "../interface/ng-fetch-request";
+import {Config,NgFetchRequestOption,InterceptResponse,Interceptor} from "../interface";
 import {HEADER_CONTENT_TYPE} from "../runtime/browser/ng-fetch-browser-builder";
-import {InterceptResponse} from "../interface/intercept-response";
-import {Interceptor} from "../interface/interceptor";
 
 export const DEFAULT_INTERCEPTOR: Interceptor = (request) => request;
 

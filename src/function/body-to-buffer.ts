@@ -1,5 +1,4 @@
-import {Config} from "../interface/config";
-import {BodySerializerAdapter} from "../interface/body-serializer-adapter";
+import {Config,BodySerializerAdapter} from "../interface";
 
 export const bodyToBuffer = (config: Config, contentType: string, body: any): unknown => {
     if (typeof body !== 'undefined') {

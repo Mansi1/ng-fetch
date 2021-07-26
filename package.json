@@ -1,6 +1,6 @@
 {
   "name": "ng-fetch",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "index.js",
   "repository": "git@github.com:Mansi1/ng-fetch.git",
   "author": "Michael Mannseicher <m.mansi1@gmx.net>",

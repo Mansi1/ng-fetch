@@ -1,4 +1,4 @@
-import {Runtime} from "./interface/runtime";
+import {Runtime} from "./interface";
 
 export const RUNTIME: Runtime = {
     browser: typeof window !== 'undefined' && typeof window.document !== 'undefined',

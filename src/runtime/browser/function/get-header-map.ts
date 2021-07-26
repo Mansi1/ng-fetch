@@ -1,4 +1,4 @@
-import {ResponseHeader} from "../../../interface/response-header";
+import {ResponseHeader} from "../../../interface";
 
 export const getHeaderMap = (header: string): ResponseHeader => {
 

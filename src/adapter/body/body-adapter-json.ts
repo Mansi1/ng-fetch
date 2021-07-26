@@ -1,4 +1,4 @@
-import {BodySerializerAdapter} from "../../interface/body-serializer-adapter";
+import {BodySerializerAdapter} from "../../interface";
 import {Buffer} from "../../polyfill/buffer";
 
 export const BodyAdapterJson: BodySerializerAdapter = (data:any, options)  => {

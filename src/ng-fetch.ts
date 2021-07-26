@@ -1,8 +1,7 @@
-import {Config} from "./interface/config";
+import {Config, NgFetch} from "./interface";
 import {buildQueryParameters} from "./function/build-query-parameter";
 import {BodyAdapterJson} from "./adapter/body/body-adapter-json";
 import {RUNTIME} from "./runtime";
-import {NgFetch} from "./interface/ng-fetch";
 import {ngFetchBrowserBuilder} from "./runtime/browser/ng-fetch-browser-builder";
 import {BodyAdapterPlainText} from "./adapter/body/body-adapter-plain-text";
 import {buildUrl} from "./function/build-url";

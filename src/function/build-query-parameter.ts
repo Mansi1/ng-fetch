@@ -1,5 +1,4 @@
-import {QueryParameter, ParameterType} from "../interface/query-parameter";
-import {BuildQueryParameter} from "../interface/build-query-parameter";
+import {QueryParameter, ParameterType,BuildQueryParameter} from "../interface";
 
 const buildQueryParam = (paramName: string, paramValue: ParameterType) =>
     `${encodeURIComponent(paramName)}=${encodeURIComponent(paramValue)}`;

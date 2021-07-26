@@ -1,8 +1,5 @@
-import {Config} from "../../interface/config";
-import {NgFetch} from "../../interface/ng-fetch";
+import {Config,NgFetch,NgFetchRequestOption,NgFetchResponse, RejectAblePromise} from "../../interface";
 import {Buffer} from "buffer";
-import {NgFetchRequestOption} from "../../interface/ng-fetch-request";
-import {NgFetchResponse, RejectAblePromise} from "../../interface/ng-fetch-response";
 import {getHeaderMap} from "./function/get-header-map";
 import {bodyToBuffer as normalBodyToBuffer} from "../../function/body-to-buffer";
 import {intercept} from "../../function/intercept";

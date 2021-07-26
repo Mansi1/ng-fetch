@@ -1,6 +1,4 @@
-import {UrlParameter} from "../interface/url-parameter";
-import {QueryParameter} from "../interface/query-parameter";
-import {Config} from "../interface/config";
+import {UrlParameter,QueryParameter,Config} from "../interface";
 
 export const buildUrl = (config: Config, url: string, urlParameter: UrlParameter = {}, queryParameter: Array<QueryParameter> = []): string => {
     let buildUrl = url;
