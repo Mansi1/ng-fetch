@@ -34,23 +34,7 @@ export const ngFetchBrowserBuilder = (config: Config): NgFetch => {
                 })
             }
 
-            // 2.0 Configure it: GET-request for the URL
-            xhr.open(method, url);
-
-            //set timeout in ms
-            xhr.timeout = config.timeoutInMs;
-
-            // 2.1 Set header
-            // eslint-disable-next-line no-restricted-syntax
-            for (const [headerName, headerValue] of Object.entries(headers)) {
-                xhr.setRequestHeader(headerName, headerValue);
-            }
-
-            requestReject = () => {
-                if (xhr.readyState !== 4)
-                    xhr.abort();
-            };
-
+            // 1.0 add event listener
             xhr.addEventListener('abort', () => reject({
                 status: -1,
                 message: 'You have canceled the request yourself',
@@ -92,9 +76,23 @@ export const ngFetchBrowserBuilder = (config: Config): NgFetch => {
             if (options?.eventListeners?.downLoadProgress) {
                 xhr.addEventListener('progress', options?.eventListeners?.downLoadProgress);
             }
-            // have to be called after event listener registration
+
             // 2.0 Configure it: GET-request for the URL
             xhr.open(method, url);
+
+            //set timeout in ms
+            xhr.timeout = config.timeoutInMs;
+
+            // 2.1 Set header
+            // eslint-disable-next-line no-restricted-syntax
+            for (const [headerName, headerValue] of Object.entries(headers)) {
+                xhr.setRequestHeader(headerName, headerValue);
+            }
+
+            requestReject = () => {
+                if (xhr.readyState !== 4)
+                    xhr.abort();
+            };
 
             xhr.send(bodyToBuffer(config, headers[HEADER_CONTENT_TYPE], options.body));
         });
