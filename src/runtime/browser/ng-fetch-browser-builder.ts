@@ -23,7 +23,7 @@ export const ngFetchBrowserBuilder = (config: Config): NgFetch => {
 
         const {url, method, headers} = intercept(config, requestUrl, options);
 
-        let requestReject: any;
+        let requestReject: () => void;
         const request = new Promise<NgFetchResponse>((resolve, reject) => {
             const xhr = new XMLHttpRequest();
 
@@ -70,7 +70,7 @@ export const ngFetchBrowserBuilder = (config: Config): NgFetch => {
                         response: Buffer.from(xhr.response),
                         headers: headers,
                     })
-                } else if (xhr.eventListener.error) {
+                } else {
                     reject({
                         status: xhr.status,
                         message: 'Error: ' + (xhr.responseType === 'text' || xhr.responseType === '') ? xhr.responseText : 'No error message',
@@ -92,6 +92,9 @@ export const ngFetchBrowserBuilder = (config: Config): NgFetch => {
             if (options?.eventListeners?.downLoadProgress) {
                 xhr.addEventListener('progress', options?.eventListeners?.downLoadProgress);
             }
+            // have to be called after event listener registration
+            // 2.0 Configure it: GET-request for the URL
+            xhr.open(method, url);
 
             xhr.send(bodyToBuffer(config, headers[HEADER_CONTENT_TYPE], options.body));
         });
